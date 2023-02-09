@@ -1,0 +1,29 @@
+<nav class="navbar ">
+  <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+              <div class="container-fluid">                           
+                  <div>              
+                          <span class="btn-cover">
+                              <div style="display: inline"><a routerLink="/" class="navbar-brand">Product Availability</a></div>
+                              <div style="display: inline" class="navbar-brand">|</div>
+                              <div style="display: inline"><a routerLink="items" class="navbar-brand">Product Nearest Location</a></div>
+                              <div style="display: inline" class="navbar-brand">|</div>
+                              <div style="display: inline"><a routerLink="availabilityItemsByLocation" class="navbar-brand">Product By Location</a></div>
+                          </span> 
+                  </div>
+              </div>
+        </div>
+      </div>
+  </div>
+  <br>
+</nav>
+<div class="well">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+</div>

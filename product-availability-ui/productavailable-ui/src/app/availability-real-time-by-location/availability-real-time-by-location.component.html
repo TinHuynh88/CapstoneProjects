@@ -1,0 +1,108 @@
+<p>Be able to view availability in real time for the items in a given location so the items that are running low on availability can be ordered sooner</p>
+<br>
+
+<div class="form-group">
+    <label for="name">Location Name: &nbsp;&nbsp;</label>
+    <select  class="custom-select" [(ngModel)]="locationName" (change)="locationChange()">
+        <option *ngFor="let i of locationArray" [ngValue]="i.locationName">{{i.locationName}}</option>
+    </select>        
+  </div>
+
+<!-- <button type="submit" class="btn btn-success" (click)="findAvailableByLocationName(locationName)">Find</button> -->
+<br>
+<div *ngIf = "availabilityItems; else elseBlock">
+    <div class="Table" >
+        <div class="Title">
+            <p>Item Found</p>
+        </div>
+        <div class="Heading" *ngIf = "availabilityItems;">
+            <div class="Cell" [appSort] = "availabilityItems" data-order="desc" data-name="1" tooltip="Click to sort Product Name" placement="top">
+                <p>Product Name</p> 
+            </div>
+            <div class="Cell" [appSort] = "availabilityItems" data-order="desc" data-name="3" tooltip="Click to sort Dept Name" placement="top">
+                <p>Dept Name</p>
+            </div>
+            <div class="Cell" [appSort] = "availabilityItems" data-order="desc" data-name="5" tooltip="Click to sort Location" placement="top">
+                <p>Location</p>
+            </div>
+            <div class="Cell" [appSort] = "availabilityItems" data-order="desc" data-name="6" tooltip="Click to sort Zipcode" placement="top">
+                <p>Zipcode</p>
+            </div>
+            <div class="Cell" [appSort] = "availabilityItems" data-order="desc" data-name="7" tooltip="Click to sort Availability" placement="top">
+                <p>Availability</p>
+            </div>
+            <div class="Cell" tooltip="Check box to update the product availability" placement="top">
+                <p>Updated</p>
+            </div>
+            <div class="Cell" tooltip="How many products need add to order" placement="top">
+                <p>Quantity</p>
+            </div>
+            <div class="Cell" tooltip="Submit all checked box" placement="top">
+                <button  class="btn btn-success" (click)="submitAllChecedkBox()" [disabled]="optionMaps.size == 0">Submit All</button>
+            </div>
+        </div>
+        <ng-template [ngIf] = "availabilityItems">
+            <div class="Row" *ngFor = "let item of availabilityItems | paginate: { itemsPerPage: pageSize, currentPage: p}">
+                <div class="Cell">
+                    <p>{{item[1]}}</p>
+                </div>
+                <div class="Cell">
+                    <p>{{item[3]}}</p>
+                </div>
+                <div class="Cell">
+                    <p>{{item[5]}}</p>
+                </div>
+                <div class="Cell">
+                    <p>{{item[6]}}</p>
+                </div>
+                <ng-template [ngIf]="item[7] >= defaulItemsQuanlity">
+                    <div class="Cell" style="text-align: center;">
+                        <p class="text-primary">{{item[7]}}</p>
+                    </div>
+                    <div class="Cell" style="text-align: center;">
+                        <input type="checkbox" name="options" value="item" [checked]="!item[10]" (change)="updateCheckedOption(item, $event)"/>
+                    </div>
+                    <div class="Cell">
+                        <input type="number" min ="-10" max="100" id="input{{item[8]}}" name="input{{item[8]}}" 
+                            [value]="item[9]" [disabled]="item[10]" (input)="inputFieldChange(item, $event)">
+                    </div>               
+                </ng-template>
+                <ng-template [ngIf]="!(item[7] >= defaulItemsQuanlity)">
+                    <div class="Cell" style="text-align: center;">
+                        <p class="text-danger">{{item[7]}}</p>
+                    </div>
+                    <div class="Cell" style="text-align: center;">
+                        <input type="checkbox" name="options" value="item" [checked]="!item[10]" (change)="updateCheckedOption(item, $event)"/>
+                    </div>
+                    <div class="Cell">
+                        <input type="number" min ="-10" max="100" id="input1{{item[8]}}" name="input1{{item[8]}}" 
+                            value="{{defaulItemsQuanlity - item[7]}}" [disabled]="item[10]" (input)="inputFieldChange(item, $event)">
+                    </div>                                                      
+                </ng-template>
+                <div class="Cell" style="text-align: center;" *ngIf="!item[10] && item[9]!=0">
+                    <button  class="btn btn-info" (click)="submitOneCheckedkBox(item)" [disabled]="item[10]">Submit</button>
+                </div>   
+            </div>
+        </ng-template>
+    </div>
+    
+    <div class="container">
+        <div class="row" style="text-align: center;">
+            <pagination-controls (pageChange)="p = $event" ></pagination-controls>
+        </div>
+        <div class="row" style="text-align: center;">
+            Items Per Page:  
+            <select  class="custom-select" [(ngModel)]="pageSize" (change)="itemsPerPageChange()">
+                <option *ngFor="let i of itemsPPageArray" [ngValue]="i">{{i}}</option>
+            </select>        
+        </div>
+    </div>
+</div>
+
+<ng-template #elseBlock>
+    <div class="container" *ngIf = "isShowTable">
+        <div class="row" style="text-align: center;">
+            <p class="text-danger" style="font-weight: bold; font-size: larger;">Item Not Found </p>
+        </div> 
+    </div>    
+</ng-template>

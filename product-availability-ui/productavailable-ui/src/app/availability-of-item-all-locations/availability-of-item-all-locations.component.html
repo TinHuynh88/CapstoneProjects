@@ -1,0 +1,75 @@
+<p>The availability of a given item and/or department in all locations where the item/department is available</p>
+<br>
+
+<div class="form-group">
+    <label for="name">Product or Dept Name</label>
+    <input type="text" class="form-control" id="nameSearch"  placeholder="Product or Dept Name"
+           required 
+           #name (keyup.enter)="findAvailabilityItemAllLocation(name.value)">    
+  </div>
+
+<button type="submit" class="btn btn-success" (click)="findAvailabilityItemAllLocation(name.value)">Find</button>
+<br>
+<div *ngIf = "availabilityItems; else elseBlock">
+    <div class="Table" >
+        <div class="Title">
+            <p>Item Found</p>
+        </div>
+        <div class="Heading" *ngIf = "availabilityItems;">
+            <div class="Cell" [appSort] = "availabilityItems" data-order="desc" data-name="1" tooltip="Click to sort Product Name" placement="top">
+                <p>Product Name</p> 
+            </div>
+            <div class="Cell" [appSort] = "availabilityItems" data-order="desc" data-name="3" tooltip="Click to sort Dept Name" placement="top">
+                <p>Dept Name</p>
+            </div>
+            <div class="Cell" [appSort] = "availabilityItems" data-order="desc" data-name="5" tooltip="Click to sort Location" placement="top">
+                <p>Location</p>
+            </div>
+            <div class="Cell" [appSort] = "availabilityItems" data-order="desc" data-name="6" tooltip="Click to sort Zipcode" placement="top">
+                <p>Zipcode</p>
+            </div>
+            <div class="Cell" [appSort] = "availabilityItems" data-order="desc" data-name="7" tooltip="Click to sort Availability" placement="top">
+                <p>Availability</p>
+            </div>
+        </div>
+        <ng-template [ngIf] = "availabilityItems">
+            <div class="Row" *ngFor = "let item of availabilityItems | paginate: { itemsPerPage: pageSize, currentPage: p}">
+                <div class="Cell">
+                    <p>{{item[1]}} :</p>
+                </div>
+                <div class="Cell">
+                    <p>{{item[3]}}</p>
+                </div>
+                <div class="Cell">
+                    <p>{{item[5]}}</p>
+                </div>
+                <div class="Cell">
+                    <p>{{item[6]}}</p>
+                </div>
+                <div class="Cell">
+                    <p>{{item[7]}}</p>
+                </div>
+            </div>
+        </ng-template>
+    </div>
+    
+    <div class="container">
+        <div class="row" style="text-align: center;">
+            <pagination-controls (pageChange)="p = $event" ></pagination-controls>
+        </div>
+        <div class="row" style="text-align: center;">
+            Items Per Page:  
+            <select  class="custom-select" [(ngModel)]="pageSize" (change)="itemsPerPageChange()">
+                <option *ngFor="let i of itemsPPageArray" [ngValue]="i">{{i}}</option>
+            </select>        
+        </div>
+    </div>
+</div>
+
+<ng-template #elseBlock>
+    <div class="container" *ngIf = "isShowTable">
+        <div class="row" style="text-align: center;">
+            <p class="text-danger" style="font-weight: bold; font-size: larger;">Item Not Found </p>
+        </div> 
+    </div>    
+</ng-template>
